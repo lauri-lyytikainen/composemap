@@ -6,9 +6,17 @@ import (
 )
 
 func main() {
-	args := arguments.Parse()
-	fmt.Println(args.Flags.Help)
-	fmt.Println(args.ComposeFilePath)
+	args, usageFunc, err := arguments.Parse()
+	if err != nil {
+		panic(err)
+	}
+	runSettings := arguments.HandleArgs(args, usageFunc)
+
+	if runSettings.CanReturnEarly {
+		return
+	}
+
+	fmt.Println(runSettings.ComposeFilePath)
 	// loadComposeFile()
 	// printOutput()
 }
