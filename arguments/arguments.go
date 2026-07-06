@@ -32,11 +32,17 @@ func Parse() (Arguments, func(), error) {
 
 func ParseArgs(args []string, w io.Writer) (Arguments, func(), error) {
 	fs := flag.NewFlagSet("composemap", flag.ContinueOnError)
+	fs.SetOutput(w)
 
 	usageShown := false
 
 	helpFlag := fs.Bool("h", false, "Show help message")
 	inputFlag := fs.String("i", "", "Specify Docker Compose file")
+
+	fs.Usage = func() {
+		fmt.Fprintf(w, "Usage: composemap [flags] <compose-file> or use the -i flag\n\r")
+		fs.PrintDefaults()
+	}
 
 	err := fs.Parse(args)
 	if err != nil {
@@ -46,11 +52,6 @@ func ParseArgs(args []string, w io.Writer) (Arguments, func(), error) {
 	filePath := *inputFlag
 	if filePath == "" {
 		filePath = strings.Join(fs.Args(), " ")
-	}
-
-	fs.Usage = func() {
-		fmt.Fprintf(w, "Usage: composemap [flags] <compose-file> or use the -i flag\n\r")
-		fs.PrintDefaults()
 	}
 
 	arguments := Arguments{
@@ -73,6 +74,6 @@ func HandleArgs(args Arguments, usageFunc func()) RunSettings {
 
 	return RunSettings{
 		ComposeFilePath: args.ComposeFilePath,
-		CanReturnEarly:  args.UsageMessageShown,
+		CanReturnEarly:  args.UsageMessageShown || args.Flags.Help,
 	}
 }
