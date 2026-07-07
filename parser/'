@@ -1,0 +1,35 @@
+package parser
+
+import (
+	"context"
+	"fmt"
+	"log"
+
+	"github.com/compose-spec/compose-go/v2/cli"
+)
+
+func ParseComposeFile(path string) {
+
+	ctx := context.Background()
+	options, err := cli.NewProjectOptions(
+		[]string{path},
+		// cli.WithOsEnv,
+		// cli.WithDotEnv,
+	)
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	project, err := options.LoadProject(ctx)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	// projectYAML, err := project.MarshalJSON()
+	// if err != nil {
+	// 	log.Fatal(err)
+	// }
+
+	fmt.Println(project.AllServices())
+}

@@ -1,8 +1,9 @@
 package main
 
 import (
-	"fmt"
+	// "fmt"
 	"github.com/lauri-lyytikainen/composemap/arguments"
+	"github.com/lauri-lyytikainen/composemap/parser"
 )
 
 func main() {
@@ -16,7 +17,6 @@ func main() {
 		return
 	}
 
-	fmt.Println(runSettings.ComposeFilePath)
-	// loadComposeFile()
-	// printOutput()
+	// fmt.Println(runSettings.ComposeFilePath)
+	parser.ParseComposeFile(runSettings.ComposeFilePath)
 }
